@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# A file which i intentionally left blank to test runfile functionality.
+
+echo "Checking all available scripts, please wait..."
