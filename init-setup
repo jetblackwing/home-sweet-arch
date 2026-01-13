@@ -12,3 +12,17 @@ git clone https://aur.archlinux.org/yay.git
 cd yay
 echo "From here, make sure that you have pressed enter if prompted during the build process."
 makepkg -si --noconfirm
+echo "AUR helper (yay) installed."
+echo "Installing essential packages..."
+ESSENTIAL_PACKAGES=(base-devel git vim wget curl aria2 htop neofetch google-chrome firefox brave-bin vlc mpv telegram-desktop-bin extension-manager code zsh)
+for package in "${ESSENTIAL_PACKAGES[@]}"; do
+    echo "Installing $package..."
+    yay -S --noconfirm "$package"
+done
+echo "Essential packages installed."
+
+echo "Changing default shell to zsh..."
+chsh -s $(which zsh)   
+echo "Default shell changed to zsh."
+echo "If you want to change the shell of your root user, run 'sudo chsh -s $(which zsh)' separately."
+echo "Initial setup for Arch Linux completed."
