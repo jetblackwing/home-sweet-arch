@@ -1,6 +1,6 @@
 #!/bin/bash
 
-THRESHOLD=75
+THRESHOLD=80
 ALERTED=0   # prevents repeated notifications
 
 get_cpu_temp() {
