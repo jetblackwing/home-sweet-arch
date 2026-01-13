@@ -22,5 +22,5 @@ check_battery() {
 # Infinite loop to monitor battery every minute
 while true; do
     check_battery
-    sleep 60  # check every 60 seconds
+    sleep 200  # check every 200 seconds
 done
