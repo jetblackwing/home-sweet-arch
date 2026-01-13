@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# This script lets the user to install all essential and core things for arch linux"
+# Usage: chmod +x init-setup.sh && ./init-setup.sh
+echo "Starting initial setup for Arch Linux..."
+echo "Updating package database and upgrading existing packages..."
+sudo pacman -Syu --noconfirm
+echo "System updated."
+echo "Installing AUR helper (yay)..."
+sudo pacman -S git --noconfirm
+git clone https://aur.archlinux.org/yay.git
+cd yay
+echo "From here, make sure that you have pressed enter if prompted during the build process."
+makepkg -si --noconfirm
