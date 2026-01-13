@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/amal/.config/StartupItems/battery_alert.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Battery Low Alert
+Comment=Show startup info

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/amal/.config/StartupItems/start1.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Battery Health Checkup
+Comment=Show startup info

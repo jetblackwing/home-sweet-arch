@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/amal/.config/StartupItems/overheat_notify.sh
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=System Overheat Detection
+Comment=Show startup info
