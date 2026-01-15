@@ -7,11 +7,11 @@
 #include <cstdio>
 #include <array>
 
-const int BATTERY_THRESHOLD = 20;
-const int TEMP_THRESHOLD = 40;
+// Below constants can be adjusted as needed. I just wanted to test it quickly. 
+const int TEMP_THRESHOLD = 40;  //b
 const int BATTERY_CHECK_INTERVAL = 200; // seconds
-const int TEMP_CHECK_INTERVAL = 60;     // seconds
-const int FOLLOW_UP_DELAY = 120;        // 2 minutes
+const int TEMP_CHECK_INTERVAL = 5;     // seconds
+const int FOLLOW_UP_DELAY = 6;        // 2 minutes
 
 int get_battery_level() {
     std::ifstream file("/sys/class/power_supply/BAT0/capacity");
