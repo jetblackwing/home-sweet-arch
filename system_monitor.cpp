@@ -12,7 +12,7 @@ const int TEMP_THRESHOLD = 40;  //b
 const int BATTERY_CHECK_INTERVAL = 200; // seconds
 const int TEMP_CHECK_INTERVAL = 5;     // seconds
 const int FOLLOW_UP_DELAY = 6;        // 2 minutes
-
+const int BATTERY_THRESHOLD = 15; // percent
 int get_battery_level() {
     std::ifstream file("/sys/class/power_supply/BAT0/capacity");
     if (file.is_open()) {

@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# ZSH HSA Installer Script
+# This script installs Zsh shell and sets up personalized Zsh settings from the zsh-files directory.
+
+set -e  # Exit on any error
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Install Zsh if not already installed
+if ! command_exists zsh; then
+    echo "Zsh is not installed. Installing Zsh..."
+    sudo pacman -Syu --noconfirm zsh
+    echo "Zsh installed successfully."
+else
+    echo "Zsh is already installed."
+fi
+
+# Install Oh My Zsh if not already installed
+if ! [ -d "$HOME/.oh-my-zsh" ]; then
+    echo "Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    echo "Oh My Zsh installed successfully."
+else
+    echo "Oh My Zsh is already installed."
+fi
+
+# Set Zsh as the default shell if not already
+if [ "$SHELL" != "$(which zsh)" ]; then
+    echo "Setting Zsh as the default shell..."
+    chsh -s "$(which zsh)"
+    echo "Default shell changed to Zsh. Please log out and log back in for changes to take effect."
+else
+    echo "Zsh is already the default shell."
+fi
+
+# Set up personalized Zsh settings
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ZSH_FILES_DIR="$SCRIPT_DIR/zsh-files"
+
+if [ -d "$ZSH_FILES_DIR" ]; then
+    echo "Found zsh-files directory. Setting up personalized Zsh settings..."
+
+    # Backup existing Zsh configuration files if they exist
+    BACKUP_DIR="$HOME/.zsh_backup_$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$BACKUP_DIR"
+
+    for file in .zshrc .zshenv .zprofile .zlogin .zlogout; do
+        if [ -f "$HOME/$file" ]; then
+            cp "$HOME/$file" "$BACKUP_DIR/"
+            echo "Backed up $file to $BACKUP_DIR"
+        fi
+    done
+
+    # Copy personalized settings
+    cp -r "$ZSH_FILES_DIR/." "$HOME/"
+
+    # Ensure proper permissions
+    chmod 644 "$HOME/.zshrc" 2>/dev/null || true
+    chmod 644 "$HOME/.zshenv" 2>/dev/null || true
+
+    echo "Personalized Zsh settings have been applied."
+    echo "Backup of previous settings saved in: $BACKUP_DIR"
+
+    # Install additional Zsh resources if present
+    if [ -d "$ZSH_FILES_DIR/zsh" ]; then
+        echo "Installing additional Zsh resources..."
+        sudo cp -r "$ZSH_FILES_DIR/zsh" /usr/share/
+        echo "Additional resources installed."
+    fi
+else
+    echo "zsh-files directory not found in $SCRIPT_DIR"
+    echo "Please add a 'zsh-files' folder in the same directory as this script,"
+    echo "containing your personalized Zsh configuration files (e.g., .zshrc, .zshenv, etc.)."
+fi
+
+echo "Zsh installation and setup complete!"
