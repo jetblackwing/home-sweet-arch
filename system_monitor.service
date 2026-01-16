@@ -1,0 +1,13 @@
+[Unit]
+Description=System Monitor Daemon
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/home/amal/Documents/home-sweet-arch/system_monitor
+Restart=always
+User=amal
+Group=amal
+
+[Install]
+WantedBy=multi-user.target
