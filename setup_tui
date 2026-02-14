@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# This script is used to set up the TUI environment for testing.
+# It checks for the presence of necessary executables and sets up the environment accordingly.
+
+# package "dialog" is required for the TUI to work, and "tput" is used for terminal capabilities.
+
+set -e
+# Check for necessary executables
+if ! command -v dialog >/dev/null 2>&1; then
+    echo "ERROR: 'dialog' is required but not found. Please install it and try again."
+    exit 1
+fi
+if ! command -v tput >/dev/null 2>&1; then
+    echo "ERROR: 'tput' is required but not found. Please install it and try again."
+    exit 1
+fi
+# Set up environment variables for TUI
+export TERM=xterm-256color
+export TUI_TESTING=1
+echo "TUI environment set up successfully."
+# Setup for executable inside this project
+dir="."
+err=0
+while IFS= read -r -d '' f; do
+    file_desc=$(file -b "$f" || true)
+    if [[ "$file_desc" == *ELF* ]]; then
+        if ! command -v ldd >/dev/null 2>&1; then
+            echo "ldd not found; skipping shared-library check for $f"
+        else
+            ldd_out=$(ldd "$f" 2>&1) || ldd_out
+            if echo "$ldd_out" | grep -q "not found"; then
+                echo "ERROR: Missing shared libraries for $f"
+                err=1
+            fi
+        fi
+    else
+        first_line=$(head -n1 "$f" || true)
+        if [[ "$first_line" =~ ^#! ]]; then
+            shebang=${first_line#\#!}
+            read -r -a parts <<<"$shebang"
+            interp=${parts[0]}
+            cmd=""
+            if [[ $(basename "$interp") == env ]]; then
+                cmd=${parts[1]:-}
+            else
+                cmd=$interp
+            fi
+            if [[ -z "$cmd" ]]; then
+                echo "WARNING: cannot determine interpreter from shebang in $f"
+            else
+                if [[ "$cmd" == /* ]]; then
+                    if [[ -x "$cmd" ]]; then
+                        echo "Interpreter exists: $cmd for $f"
+                    else
+                        echo "ERROR: Interpreter '$cmd' not found or not executable for $f"
+                        err=1
+                    fi
+                else
+                    if command -v "$cmd" >/dev/null 2>&1; then
+                        echo "Interpreter found in PATH: $cmd for $f"
+                    else
+                        echo "ERROR: Interpreter '$cmd' not found in PATH for $f"
+                        err=1
+                    fi
+                fi
+            fi
+        fi
+    fi
+done < <(find "$dir" -type f -executable -print0)
+if [[ $err -ne 0 ]]; then
+    echo "One or more errors found in executables. Please fix them before proceeding."
+    exit 1
+fi
+echo "All executables checked successfully."   
