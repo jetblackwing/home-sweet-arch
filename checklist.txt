@@ -1,0 +1,13 @@
+### A checklist file ###
+
+The sole purpose of this file is to update and manage past and upcoming ideas for this project.
+This file may apply to various projects.
+
+This file is created on Mar 15 2026 10:45 PM
+
+1. Update UI
+2. Improvise load balancer
+3. Application enhancements
+    3a. App wrapper
+    3b. app quick exporter
+    3c. app deployment automation
